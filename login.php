@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,6 +15,11 @@
 
     <h1>Log in</h1>
 
+    <form action="loginAccount.php" method="post">
+        <input type="text" name="username" placeholder="Username">
+        <input type="password" name="password" placeholder="Password">
+        <input type="submit" name="loginAccount" value="Log in">
+    </form>
     <a href="signup.php">Don't have an account? Create account</a>
 
 </body>
