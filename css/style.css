@@ -1,0 +1,13 @@
+:root {
+    /* colors */
+    --background-color: #FFF9EE;
+    --text-color: #252525;
+    --button-color: #4F7C5B;
+    --button-hover-color: #355A40;
+    /* accent */
+    --accent-color: #E9A9B8;
+    --accent-color-2: #F4D35E;
+    /* fonts */
+    --font-family: 'Fredoka One', sans-serif;
+    
+}
