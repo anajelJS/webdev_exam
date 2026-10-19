@@ -6,7 +6,7 @@ CREATE TABLE userAccount (
     id INT AUTO_INCREMENT PRIMARY KEY,
     fName VARCHAR(255) NOT NULL,
     lName VARCHAR(255) NOT NULL,
-    username VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     gender ENUM('male', 'female', 'other') NOT NULL,

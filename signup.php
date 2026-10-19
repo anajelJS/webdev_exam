@@ -12,6 +12,14 @@
 
 <body>
 
+<?php
+$status = $_GET['status'] ?? '';
+
+if ($status === 'taken') {
+    echo "<p>This username is already taken. Please choose another.</p>";
+}
+
+?>
     <h1>Create account</h1>
     <form action="createAccount.php" method="post"> <br>
         <input type="text" name="fName" placeholder="First name"> <br>

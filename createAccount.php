@@ -10,13 +10,20 @@ if (isset($_POST['createAccount'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    
+    try {
     $query = $pdo->prepare("INSERT INTO userAccount (fName, lName, username, gender, email, password) VALUES (?, ?, ?, ?, ?, ?)");
     $query->execute([$fName, $lName, $username, $gender, $email, $hashedPassword]);
     header("Location: login.php?status=added");
     exit();
+} catch (PDOException $e) {
+    if ($e->getCode() === '23000') {
+        header("Location: signup.php?status=taken");
+        exit();
+    }
+    throw $e;
+}
 } else {
     echo "Something went wrong. Please try again. ";
     exit();
-}
+} 
 ?>  
