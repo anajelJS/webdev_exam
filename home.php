@@ -8,8 +8,11 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 
-echo "<h2>Welcome " . $_SESSION['username'] . "! What would you like to do today?</h2>";
 ?>
 
-<a href="logout.php">Logout</a> <br>
-<a href="settings/settings.php">Account settings</a>
+<h2>
+    Welcome <?= htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8') ?>!
+    What would you like to do today?
+</h2>
+
+<a href="userProfile/profile.php">Profile</a> <br>

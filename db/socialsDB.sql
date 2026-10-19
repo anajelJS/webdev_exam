@@ -8,6 +8,7 @@ CREATE TABLE userAccount (
     lName VARCHAR(255) NOT NULL,
     username VARCHAR(255) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL,
+    bio VARCHAR(500) DEFAULT NULL,
     password VARCHAR(255) NOT NULL,
     gender ENUM('male', 'female', 'other') NOT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP, /* when the row is first created, automatically put the current date and time here*/

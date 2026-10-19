@@ -16,8 +16,8 @@ if (isset($_POST['changeUsername'])) {
         header("Location: settings.php?page=username&status=invalid");
         exit();
     }
-/* check if username is already taken
- */    try {
+/* check if username is already taken   */    
+try {
     $updateUsername = $pdo->prepare(
         "UPDATE userAccount SET username = ? WHERE id = ?"
     );
