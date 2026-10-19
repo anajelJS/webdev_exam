@@ -24,6 +24,6 @@ CREATE TABLE post (
 
     FOREIGN KEY (user_id)
         REFERENCES userAccount(id)
-        ON DELETE CASCADE
+        ON DELETE CASCADE /* if the user is deleted, all their posts will be deleted */
 );
 

@@ -1,3 +1,4 @@
+
 <?php
 session_start();
 require_once "includes/connection.php";
@@ -18,6 +19,19 @@ $query = $pdo->prepare(
 $query->execute([$user_id]);
 
 $user = $query->fetch(PDO::FETCH_ASSOC);
+
+$postsQuery = $pdo->prepare(
+    "SELECT post.id, post.content, post.createdAt,
+            userAccount.username, userAccount.profilePicture
+     FROM post
+     INNER JOIN userAccount
+         ON post.user_id = userAccount.id
+     ORDER BY post.createdAt DESC, post.id DESC"
+);
+
+$postsQuery->execute();
+
+$posts = $postsQuery->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <?php if (!empty($user['profilePicture'])): ?>
@@ -43,4 +57,25 @@ $user = $query->fetch(PDO::FETCH_ASSOC);
     What would you like to do today?
 </h2>
 
-<a href="userProfile/profile.php">Profile</a>
+
+<a href="userProfile/profile.php">Profile</a> <br>
+<a href="home.php">Feed</a> <br>
+<a href="home.php?page=createPost">Create Post</a> <br>
+
+<?php
+$page = $_GET['page'] ?? 'feed';
+
+switch ($page) {
+    case 'createPost':
+        include 'posts/createPost.php';
+        break;
+
+    case 'feed':
+        include 'posts/feed.php';
+        break;
+
+    default:
+        echo "<h3>Page not found.</h3>";
+        break;
+}
+?>
