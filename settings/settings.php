@@ -69,6 +69,14 @@ if (!isset($_SESSION['user_id'])) {
 
     <a href="settings.php?page=delete">Delete account</a>
     <br>
+    <?php
+    $page = $_GET['page'] ?? 'main';
+    switch ($page) {
+        case 'delete':
+            include 'deleteAccount.php';
+            break;
+    }
+    ?> <br>
 
     <a href="../home.php">Back</a>
 
