@@ -3,6 +3,12 @@ require_once "includes/connection.php";
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 if (isset($_POST['createAccount'])) {
+    if (!empty($_POST['website'])) {
+    exit("Registration rejected.");
+    }
+
+
+
     $fName = $_POST['fName'];
     $lName = $_POST['lName'];
     $username = $_POST['username'];
@@ -15,7 +21,7 @@ if (isset($_POST['createAccount'])) {
         exit();
     }
 
-    
+
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
     try {
     $query = $pdo->prepare("INSERT INTO userAccount (fName, lName, username, gender, email, password) VALUES (?, ?, ?, ?, ?, ?)");

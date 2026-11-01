@@ -11,3 +11,8 @@
     --font-family: 'Fredoka One', sans-serif;
     
 }
+
+.honeypot {
+    position: absolute;
+    left: -9999px;
+}

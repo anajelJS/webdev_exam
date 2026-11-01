@@ -30,6 +30,12 @@ if ($status === 'taken') {
         <input type="radio" name="gender" value="other"> Other <br>
         <input type="email" name="email" placeholder="Email"> <br>
         <input type="password" name="password" placeholder="Password"> <br>
+
+        <div class="honeypot" aria-hidden="true">
+        <label for="website">Website</label>
+        <input type="text" name="website" id="website" tabindex="-1" autocomplete="off">
+        </div>
+
         <button type="submit" name="createAccount">Create account</button>
     </form>
 
