@@ -7,6 +7,26 @@ if (isset($_POST['createAccount'])) {
     exit("Registration rejected.");
     }
 
+    $ipAddress = $_SERVER['REMOTE_ADDR'];
+
+    $query = $pdo->prepare(
+        "SELECT COUNT(*) FROM registrationAttempts
+         WHERE ipAddress = ?
+         AND attemptedAt > NOW() - INTERVAL 10 MINUTE"
+    );
+    
+    $query->execute([$ipAddress]);
+    $attemptCount = $query->fetchColumn();
+    
+    if ($attemptCount >= 20) {
+        exit("Too many registration attempts. Please try again later.");
+    }
+    
+    $query = $pdo->prepare(
+        "INSERT INTO registrationAttempts (ipAddress) VALUES (?)"
+    );
+    
+    $query->execute([$ipAddress]);
 
 
     $fName = $_POST['fName'];

@@ -27,3 +27,10 @@ CREATE TABLE post (
         ON DELETE CASCADE /* if the user is deleted, all their posts will be deleted */
 );
 
+CREATE TABLE registrationAttempts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ipAddress VARCHAR(45) NOT NULL,
+    attemptedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_registration_ip_time (ipAddress, attemptedAt)
+);
+
