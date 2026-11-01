@@ -9,6 +9,13 @@ if (isset($_POST['createAccount'])) {
     $gender = $_POST['gender'];
     $email = $_POST['email'];
     $password = $_POST['password'];
+
+    if (strlen($password) < 8) {
+        echo "Password must be at least 8 characters long";
+        exit();
+    }
+
+    
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
     try {
     $query = $pdo->prepare("INSERT INTO userAccount (fName, lName, username, gender, email, password) VALUES (?, ?, ?, ?, ?, ?)");
@@ -23,7 +30,7 @@ if (isset($_POST['createAccount'])) {
     throw $e;
 }
 } else {
-    echo "Something went wrong. Please try again. ";
+    echo "A user with this username or email already exists. Please choose another username or email. ";
     exit();
 } 
 ?>  
