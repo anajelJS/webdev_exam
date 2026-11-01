@@ -37,6 +37,37 @@
                 <?= htmlspecialchars($post['content'], ENT_QUOTES, 'UTF-8') ?>
             </p>
 
+            <?php if (!empty($post['image'])): ?>
+
+                <img
+                    src="uploads/posts/<?= htmlspecialchars($post['image'], ENT_QUOTES, 'UTF-8') ?>"
+                    alt="Post image"
+                    style="max-width: 100%; margin-top: 10px;"
+                >
+
+            <?php endif; ?>
+
+                <?php if ((int)$post['user_id'] === (int)$_SESSION['user_id']): ?>
+
+                <form action="posts/deletePost.php" method="POST">
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>"
+                    >
+                    <input
+                        type="hidden"
+                        name="post_id"
+                        value="<?= (int)$post['id'] ?>"
+                    >
+
+                    <button type="submit" name="deletePost">
+                        Delete Post
+                    </button>
+                </form>
+
+    <?php endif; ?>
+
         </div>
 
     <?php endforeach; ?>

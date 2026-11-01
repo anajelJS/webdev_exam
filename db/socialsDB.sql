@@ -20,12 +20,14 @@ CREATE TABLE post (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     content TEXT NOT NULL,
+    image VARCHAR(255) DEFAULT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (user_id)
         REFERENCES userAccount(id)
-        ON DELETE CASCADE /* if the user is deleted, all their posts will be deleted */
+        ON DELETE CASCADE
 );
+
 
 CREATE TABLE registrationAttempts (
     id INT AUTO_INCREMENT PRIMARY KEY,

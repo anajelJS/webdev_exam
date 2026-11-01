@@ -3,6 +3,12 @@
 session_start();
 require_once "includes/connection.php";
 
+
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 if (!isset($_SESSION['user_id'])) {
@@ -21,7 +27,7 @@ $query->execute([$user_id]);
 $user = $query->fetch(PDO::FETCH_ASSOC);
 
 $postsQuery = $pdo->prepare(
-    "SELECT post.id, post.content, post.createdAt,
+    "SELECT post.id, post.user_id, post.content, post.image, post.createdAt,
             userAccount.username, userAccount.profilePicture
      FROM post
      INNER JOIN userAccount
