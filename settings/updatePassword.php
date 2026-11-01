@@ -9,6 +9,14 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 if (isset($_POST['changePassword'])) {
+    if (
+        !isset($_POST['csrf_token'], $_SESSION['csrf_token']) ||
+        !is_string($_POST['csrf_token']) ||
+        !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])
+) {
+    echo "Invalid security token. Please try again.";
+    exit();
+}
     $currentPassword = $_POST['currentPassword'];
     $newPassword = $_POST['newPassword'];
     $confirmPassword = $_POST['confirmPassword'];
