@@ -2,7 +2,10 @@
 <?php
 session_start();
 require_once "includes/connection.php";
+require_once "classes/like.php";
 
+
+$like = new Like($pdo);
 
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));

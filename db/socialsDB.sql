@@ -36,3 +36,17 @@ CREATE TABLE registrationAttempts (
     INDEX idx_registration_ip_time (ipAddress, attemptedAt)
 );
 
+CREATE TABLE postLike (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    post_id INT NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id)
+    REFERENCES userAccount(id)
+    ON DELETE CASCADE, /* if the user's account is deleted, delete their like */
+    FOREIGN KEY (post_id)
+    REFERENCES post(id)
+    ON DELETE CASCADE,
+    UNIQUE KEY unique_user_post_like (user_id, post_id)
+);
+
