@@ -50,3 +50,24 @@ CREATE TABLE postLike (
     UNIQUE KEY unique_user_post_like (user_id, post_id)
 );
 
+CREATE TABLE postComment (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    post_id INT NOT NULL,
+    parent_comment_id INT DEFAULT NULL,
+    content TEXT NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id)
+        REFERENCES userAccount(id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (post_id)
+        REFERENCES post(id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (parent_comment_id)
+        REFERENCES postComment(id)
+        ON DELETE CASCADE
+);
+

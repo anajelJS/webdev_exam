@@ -3,10 +3,10 @@
 session_start();
 require_once "includes/connection.php";
 require_once "classes/like.php";
-
+require_once "classes/comment.php";
 
 $like = new Like($pdo);
-
+$comment = new Comment($pdo);
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
