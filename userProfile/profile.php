@@ -1,15 +1,28 @@
 <?php
 session_start();
+
 require_once '../includes/connection.php';
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login.php");
-    exit();
-}
+require_once '../classes/auth.php';
 
-$user_id = $_SESSION['user_id'];
+$auth = new Auth();
+$auth->requireLogin();
 
-$query = $pdo->prepare("SELECT username, fName, lName, bio, profilePicture FROM userAccount WHERE id = ?");
+$user_id = (int) $_SESSION['user_id'];
+
+$query = $pdo->prepare(
+    "SELECT
+        userAccount.username,
+        userAccount.fName,
+        userAccount.lName,
+        userAccount.bio,
+        userAccount.profilePicture,
+        userPostStatsView.total_posts,
+        userPostStatsView.total_likes_received
+     FROM userAccount
+     LEFT JOIN userPostStatsView
+        ON userAccount.id = userPostStatsView.user_id
+     WHERE userAccount.id = ?"
+);
 $query->execute([$user_id]);
 
 $user = $query->fetch(PDO::FETCH_ASSOC);
@@ -26,6 +39,15 @@ $user = $query->fetch(PDO::FETCH_ASSOC);
 <p>
     <?= htmlspecialchars($user['bio'] ?? 'No bio yet.', ENT_QUOTES, 'UTF-8') ?> 
 </p>
+<div class="profile-stats">
+    <p>
+        🌱 Posts: <?= (int) ($user['total_posts'] ?? 0) ?>
+    </p>
+
+    <p>
+        ❤️ Likes received: <?= (int) ($user['total_likes_received'] ?? 0) ?>
+    </p>
+</div>
 
 <?php if (!empty($user['profilePicture'])): ?>
 

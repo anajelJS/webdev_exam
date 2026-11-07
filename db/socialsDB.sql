@@ -71,3 +71,60 @@ CREATE TABLE postComment (
         ON DELETE CASCADE
 );
 
+CREATE OR REPLACE VIEW postEngagementView AS
+SELECT
+    post.id AS post_id,
+
+    (SELECT COUNT(*)
+     FROM postLike
+     WHERE postLike.post_id = post.id) AS like_count,
+
+    (SELECT COUNT(*)
+     FROM postComment
+     WHERE postComment.post_id = post.id) AS comment_count
+
+FROM post;
+
+CREATE OR REPLACE VIEW userPostStatsView AS
+SELECT
+    userAccount.id AS user_id,
+    COUNT(DISTINCT post.id) AS total_posts,
+    COUNT(postLike.id) AS total_likes_received
+FROM userAccount
+LEFT JOIN post
+    ON post.user_id = userAccount.id
+LEFT JOIN postLike
+    ON postLike.post_id = post.id
+GROUP BY userAccount.id;
+
+
+
+CREATE TRIGGER validateCommentBeforeInsert
+BEFORE INSERT ON postComment
+FOR EACH ROW
+BEGIN
+    IF NEW.content IS NULL
+       OR CHAR_LENGTH(TRIM(NEW.content)) = 0
+       OR CHAR_LENGTH(NEW.content) > 1000 THEN
+
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Comment must contain between 1 and 1000 characters.';
+
+    END IF;
+END;
+
+CREATE TRIGGER validatePostBeforeInsert
+BEFORE INSERT ON post
+FOR EACH ROW
+BEGIN
+    IF
+        (NEW.content IS NULL OR CHAR_LENGTH(TRIM(NEW.content)) = 0)
+        AND
+        (NEW.image IS NULL OR CHAR_LENGTH(TRIM(NEW.image)) = 0)
+    THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'A post must contain text or an image.';
+    END IF;
+END;
+
+

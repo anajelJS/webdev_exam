@@ -12,6 +12,7 @@ $auth->requireLogin('login.php');
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
+
 $like = new Like($pdo);
 $comment = new Comment($pdo);
 $user_id =  $_SESSION['user_id'];
@@ -26,10 +27,14 @@ $user = $query->fetch(PDO::FETCH_ASSOC);
 
 $postsQuery = $pdo->prepare(
     "SELECT post.id, post.user_id, post.content, post.image, post.createdAt,
-            userAccount.username, userAccount.profilePicture
+            userAccount.username, userAccount.profilePicture,
+            postEngagementView.like_count,
+            postEngagementView.comment_count
      FROM post
      INNER JOIN userAccount
          ON post.user_id = userAccount.id
+     LEFT JOIN postEngagementView
+         ON post.id = postEngagementView.post_id
      ORDER BY post.createdAt DESC, post.id DESC"
 );
 

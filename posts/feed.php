@@ -52,7 +52,8 @@
                     (int) $post['id']
                 );
 
-                $likeCount = $like->countLikes((int) $post['id']);
+                $likeCount = (int) ($post['like_count'] ?? 0);
+                $commentCount = (int) ($post['comment_count'] ?? 0);
             ?>
 
             <form
@@ -76,6 +77,9 @@
                     (<?= $likeCount ?>)
                 </button>
             </form>
+            <p>
+                💬 <?= $commentCount ?> comments
+            </p>
             <form action="posts/createComment.php" method="POST">
 
                 <input
