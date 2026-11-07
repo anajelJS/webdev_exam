@@ -1,25 +1,13 @@
 <?php
 session_start();
 require_once '../includes/connection.php';
+require_once "../classes/auth.php";
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login.php");
-    exit();
-}
+$auth = new Auth();
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: ../home.php");
-    exit();
-}
-
-if (
-    !isset($_POST['csrf_token'], $_SESSION['csrf_token']) ||
-    !is_string($_POST['csrf_token']) ||
-    !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])
-) {
-    http_response_code(403);
-    exit("Invalid CSRF token.");
-}
+$auth->requireLogin();
+$auth->requirePost();
+$auth->validateCsrf();
 
 $post_id = filter_input(INPUT_POST, 'post_id', FILTER_VALIDATE_INT);
 

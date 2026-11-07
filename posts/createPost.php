@@ -1,7 +1,12 @@
+
 <h2>Create a Post 🌱</h2>
 
 <form action="posts/uploadPost.php" method="POST" enctype="multipart/form-data"> <!--enctype="multipart/form-data" tells the browser that this form can send files, not just text.-->
-
+<input
+    type="hidden"
+    name="csrf_token"
+    value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>"
+>
     <label for="content">What's on your mind?</label>
     <br>
 

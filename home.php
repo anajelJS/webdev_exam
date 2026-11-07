@@ -4,22 +4,17 @@ session_start();
 require_once "includes/connection.php";
 require_once "classes/like.php";
 require_once "classes/comment.php";
+require_once "classes/auth.php";
 
-$like = new Like($pdo);
-$comment = new Comment($pdo);
+$auth = new Auth();
+
+$auth->requireLogin('login.php');
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
-
-
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
-}
-
-$user_id = $_SESSION['user_id'];
+$like = new Like($pdo);
+$comment = new Comment($pdo);
+$user_id =  $_SESSION['user_id'];
 
 $query = $pdo->prepare(
     "SELECT profilePicture FROM userAccount WHERE id = ?"

@@ -2,20 +2,24 @@
 <?php
 session_start();
 require_once '../includes/connection.php';
+require_once "../classes/auth.php";
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login.php");
-    exit();
+$auth = new Auth();
+
+$auth->requireLogin();
+$auth->requirePost();
+$auth->validateCsrf();
+
+
+$content = $_POST['content'] ?? '';
+
+if (!is_string($content)) {
+    http_response_code(400);
+    exit("Invalid post content.");
 }
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST'
-    || !isset($_POST['publishPost'])) {
-    header("Location: ../home.php");
-    exit();
-}
-
-$content = trim($_POST['content'] ?? '');
-$user_id = $_SESSION['user_id'];
+$content = trim($content);
+$user_id =  $_SESSION['user_id'];
 $image = $_FILES['image'] ?? null;
 $hasImage = $image !== null
     && $image['error'] !== UPLOAD_ERR_NO_FILE;
