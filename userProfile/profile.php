@@ -124,9 +124,9 @@ $profilePosts = $postsQuery->fetchAll(PDO::FETCH_ASSOC);
         gap: 10px;
         max-width: 650px;
     ">
-
+ 
         <?php foreach ($profilePosts as $post): ?>
-
+     <a href="../posts/viewPost.php?id=<?= (int) $post['id'] ?>">
             <div style="
                 border: 1px solid #ccc;
                 padding: 5px;
@@ -153,9 +153,9 @@ $profilePosts = $postsQuery->fetchAll(PDO::FETCH_ASSOC);
                 <?php endif; ?>
 
             </div>
-
+            </a>
         <?php endforeach; ?>
-
+        
     </div>
 
 <?php endif; ?>
