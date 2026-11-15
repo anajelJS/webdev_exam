@@ -9,7 +9,10 @@
 
     <?php foreach ($posts as $post): ?>
 
-        <div style="padding: 15px; border: 1px solid #ccc; margin-bottom: 15px;">
+                <div
+            id="post-<?= (int) $post['id'] ?>"
+            style="padding: 15px; border: 1px solid #ccc; margin-bottom: 15px;"
+        >
 
                     <a href="userProfile/profile.php?id=<?= (int) $post['user_id'] ?>">
 
@@ -140,6 +143,11 @@
                                 name="comment_id"
                                 value="<?= (int) $singleComment['id'] ?>"
                             >
+                            <input
+                                type="hidden"
+                                name="post_id"
+                                value="<?= (int) $post['id'] ?>"
+                             >
 
                             <button type="submit">Delete Comment</button>
 

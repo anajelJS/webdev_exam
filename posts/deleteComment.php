@@ -11,12 +11,28 @@ $auth->requireLogin();
 $auth->requirePost();
 $auth->validateCsrf();
 
-$commentId = filter_input(INPUT_POST, 'comment_id', FILTER_VALIDATE_INT);
+$commentId = filter_input(
+    INPUT_POST,
+    'comment_id',
+    FILTER_VALIDATE_INT,
+    ['options' => ['min_range' => 1]]
+);
 
-
-if ($commentId === false || $commentId === null || $commentId <= 0) {
+if (!$commentId) {
     http_response_code(400);
     exit("Invalid comment ID.");
+}
+
+$postId = filter_input(
+    INPUT_POST,
+    'post_id',
+    FILTER_VALIDATE_INT,
+    ['options' => ['min_range' => 1]]
+);
+
+if (!$postId) {
+    http_response_code(400);
+    exit("Invalid post ID.");
 }
 
 $userId = (int) $_SESSION['user_id'];
@@ -29,5 +45,10 @@ if (!$deleted) {
     exit("Comment not found or you do not have permission to delete it.");
 }
 
-header("Location: ../home.php");
+if (($_POST['return_to'] ?? '') === 'post') {
+    header("Location: viewPost.php?id=" . $postId);
+} else {
+    header("Location: ../home.php#post-" . $postId);
+}
+
 exit();

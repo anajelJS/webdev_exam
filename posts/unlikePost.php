@@ -24,5 +24,10 @@
     $like = new Like($pdo);
     $like->unlikePost($userId, $postId);
 
-    header("Location: ../home.php");
-    exit();
+    if (($_POST['return_to'] ?? '') === 'post') {
+    header("Location: viewPost.php?id=" . $postId);
+} else {
+    header("Location: ../home.php#post-" . $postId);
+}
+
+exit();

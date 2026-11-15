@@ -111,12 +111,142 @@ if (empty($_SESSION['csrf_token'])) {
         <?= htmlspecialchars($post['content'], ENT_QUOTES, 'UTF-8') ?>
     </p>
 
-    <p>❤️ <?= $likeCount ?> likes</p>
-    <p>💬 <?= $commentCount ?> comments</p>
+    <form
+    action="<?= $hasLiked ? 'unlikePost.php' : 'likePost.php' ?>"
+    method="POST"
+>
+    <input
+        type="hidden"
+        name="csrf_token"
+        value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>"
+    >
 
+    <input
+        type="hidden"
+        name="post_id"
+        value="<?= (int) $post['id'] ?>"
+    >
+
+    <button type="submit">
+        <?= $hasLiked ? '💔 Unlike' : '❤️ Like' ?>
+        (<?= $likeCount ?>)
+    </button>
+    <input
+        type="hidden"
+        name="return_to"
+        value="post"
+    >
+</form>   
+    <p>💬 <?= $commentCount ?> comments</p>
 </div>
 
 <br>
+
+<h3>Comments 💬</h3>
+
+<!-- Create a new comment -->
+<form action="createComment.php" method="POST">
+
+    <input
+        type="hidden"
+        name="csrf_token"
+        value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>"
+    >
+
+    <input
+        type="hidden"
+        name="post_id"
+        value="<?= (int) $postId ?>"
+    >
+
+    <input
+        type="hidden"
+        name="return_to"
+        value="post"
+    >
+
+    <textarea
+        name="content"
+        placeholder="Write a comment..."
+        maxlength="1000"
+        required
+    ></textarea>
+
+    <button type="submit">Post Comment</button>
+
+</form>
+
+<!-- Display existing comments -->
+<?php if (empty($comments)): ?>
+
+    <p>No comments yet. Be the first to comment!</p>
+
+<?php else: ?>
+
+    <?php foreach ($comments as $singleComment): ?>
+
+        <div class="comment">
+
+            <strong>
+                <?= htmlspecialchars(
+                    $singleComment['username'],
+                    ENT_QUOTES,
+                    'UTF-8'
+                ) ?>
+            </strong>
+
+            <p>
+                <?= nl2br(htmlspecialchars(
+                    $singleComment['content'],
+                    ENT_QUOTES,
+                    'UTF-8'
+                )) ?>
+            </p>
+
+            <!-- Only allow the comment owner to delete -->
+            <?php if (
+                (int) $singleComment['user_id'] === $loggedInUserId
+            ): ?>
+
+                <form action="deleteComment.php" method="POST">
+
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="comment_id"
+                        value="<?= (int) $singleComment['id'] ?>"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="post_id"
+                        value="<?= (int) $postId ?>"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="return_to"
+                        value="post"
+                    >
+
+                    <button type="submit">
+                        Delete Comment
+                    </button>
+
+                </form>
+
+            <?php endif; ?>
+
+        </div>
+
+    <?php endforeach; ?>
+
+<?php endif; ?>
 
 <a href="../userProfile/profile.php?id=<?= (int) $post['user_id'] ?>">
     Back to profile

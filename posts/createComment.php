@@ -38,5 +38,10 @@ $userId = (int) $_SESSION['user_id'];
 $comment = new Comment($pdo);
 $comment->addComment($userId, $postId, $content);
 
-header("Location: ../home.php");
+if (($_POST['return_to'] ?? '') === 'post') {
+    header("Location: viewPost.php?id=" . $postId);
+} else {
+    header("Location: ../home.php#post-" . $postId);
+}
+
 exit();

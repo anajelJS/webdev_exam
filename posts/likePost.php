@@ -23,5 +23,12 @@ $userId = $_SESSION['user_id'];
 $like = new Like($pdo);
 $like->likePost($userId, $postId);
 
-header("Location: ../home.php");
+if (($_POST['return_to'] ?? '') === 'post') {
+    header("Location: viewPost.php?id=" . $postId);
+} else {
+    header("Location: ../home.php#post-" . $postId);
+}
+
+exit();
+
 exit();
