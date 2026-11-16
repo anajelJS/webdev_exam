@@ -28,4 +28,27 @@ public function requirePost(): void
         exit("Method not allowed.");
     }
 }
+
+public function requireAdmin(PDO $pdo): void
+{
+    $this->requireLogin();
+
+    $query = $pdo->prepare(
+        "SELECT role.name
+         FROM userAccount
+         INNER JOIN role
+             ON userAccount.role_id = role.id
+         WHERE userAccount.id = ?"
+    );
+
+    $query->execute([(int) $_SESSION['user_id']]);
+
+    $role = $query->fetchColumn();
+
+    if ($role !== 'admin') {
+        http_response_code(403);
+        exit("Access denied. Administrators only.");
+    }
+}
+
 }

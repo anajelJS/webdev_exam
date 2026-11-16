@@ -2,6 +2,18 @@ DROP DATABASE IF EXISTS socialsDB;
 CREATE DATABASE socialsDB;
 USE socialsDB;
 
+
+CREATE TABLE role (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE
+);
+
+INSERT INTO role (id, name)
+VALUES
+    (1, 'user'),
+    (2, 'moderator'),
+    (3, 'admin');
+
 CREATE TABLE userAccount (
     id INT AUTO_INCREMENT PRIMARY KEY,
     fName VARCHAR(255) NOT NULL,
@@ -12,9 +24,15 @@ CREATE TABLE userAccount (
     profilePicture VARCHAR(255) DEFAULT NULL,
     password VARCHAR(255) NOT NULL,
     gender ENUM('male', 'female', 'other') NOT NULL,
+    role_id INT NOT NULL DEFAULT 1,
+    isBanned TINYINT(1) NOT NULL DEFAULT 0,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP, /* when the row is first created, automatically put the current date and time here*/
-    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_user_role
+            FOREIGN KEY (role_id)
+            REFERENCES role(id)
 );
+
 
 CREATE TABLE post (
     id INT AUTO_INCREMENT PRIMARY KEY,

@@ -12,6 +12,17 @@ $auth->requireLogin('login.php');
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
+$roleQuery = $pdo->prepare(
+    "SELECT role.name
+     FROM userAccount
+     INNER JOIN role
+         ON userAccount.role_id = role.id
+     WHERE userAccount.id = ?"
+);
+
+$roleQuery->execute([(int) $_SESSION['user_id']]);
+
+$isAdmin = ($roleQuery->fetchColumn() === 'admin');
 
 $like = new Like($pdo);
 $comment = new Comment($pdo);
@@ -70,6 +81,9 @@ $posts = $postsQuery->fetchAll(PDO::FETCH_ASSOC);
 <a href="userProfile/profile.php">Profile</a> <br>
 <a href="home.php">Feed</a> <br>
 <a href="home.php?page=createPost">Create Post</a> <br>
+<?php if ($isAdmin): ?>
+    <a href="admin/index.php">Admin Dashboard</a> <br>
+<?php endif; ?>
 
 <?php
 $page = $_GET['page'] ?? 'feed';

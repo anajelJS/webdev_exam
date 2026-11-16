@@ -138,13 +138,20 @@ if (empty($_SESSION['csrf_token'])) {
     >
 </form>   
     <p>💬 <?= $commentCount ?> comments</p>
+    <?php
+    $postOwnerId = (int) $post['user_id'];
+    $deletePostAction = 'deletePost.php';
+
+    include __DIR__ . '/../includes/components/deletePostButton.php';
+?>
+
+
 </div>
 
 <br>
 
 <h3>Comments 💬</h3>
 
-<!-- Create a new comment -->
 <form action="createComment.php" method="POST">
 
     <input
@@ -176,7 +183,6 @@ if (empty($_SESSION['csrf_token'])) {
 
 </form>
 
-<!-- Display existing comments -->
 <?php if (empty($comments)): ?>
 
     <p>No comments yet. Be the first to comment!</p>
@@ -203,7 +209,6 @@ if (empty($_SESSION['csrf_token'])) {
                 )) ?>
             </p>
 
-            <!-- Only allow the comment owner to delete -->
             <?php if (
                 (int) $singleComment['user_id'] === $loggedInUserId
             ): ?>

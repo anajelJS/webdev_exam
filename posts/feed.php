@@ -156,32 +156,25 @@
                         <?php endif; ?>
                     </div>
 
+                
+                    <?php endforeach; ?>
+
+                </div>
+
+                <?php
+                    $postId = (int) $post['id'];
+                    $postOwnerId = (int) $post['user_id'];
+                    $loggedInUserId = (int) $_SESSION['user_id'];
+
+                    $deletePostAction = 'posts/deletePost.php';
+
+                    include __DIR__ . '/../includes/components/deletePostButton.php';
+                ?>
+
+                </div>
+
                 <?php endforeach; ?>
 
-            </div>
-                <?php if ((int)$post['user_id'] === (int)$_SESSION['user_id']): ?>
+                <?php endif; ?>
 
-                <form action="posts/deletePost.php" method="POST">
-                    <input
-                        type="hidden"
-                        name="csrf_token"
-                        value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>"
-                    >
-                    <input
-                        type="hidden"
-                        name="post_id"
-                        value="<?= (int)$post['id'] ?>"
-                    >
-
-                    <button type="submit" name="deletePost">
-                        Delete Post
-                    </button>
-                </form>
-
-    <?php endif; ?>
-
-        </div>
-
-    <?php endforeach; ?>
-
-<?php endif; ?>
+ 
