@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 
@@ -7,7 +6,9 @@ require_once '../classes/auth.php';
 
 $auth = new Auth();
 $auth->requireAdmin($pdo);
-
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 define('GROWUM_ADMIN', true);
 
 $page = $_GET['page'] ?? 'dashboard';
@@ -37,5 +38,10 @@ switch ($page) {
         http_response_code(404);
         echo "<p>Page not found.</p>";
         break;
+        case 'banUser':
+            include __DIR__ . '/users.php';
+            include __DIR__ . '/banUser.php';
+            break;
 }
 ?>
+

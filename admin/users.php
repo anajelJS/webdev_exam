@@ -11,6 +11,8 @@ $query = $pdo->prepare(
         userAccount.username,
         userAccount.email,
         userAccount.createdAt,
+        userAccount.isBanned,
+        userAccount.banReason,
         role.name AS role
      FROM userAccount
      INNER JOIN role
@@ -31,7 +33,9 @@ $users = $query->fetchAll(PDO::FETCH_ASSOC);
         <th>Username</th>
         <th>Email</th>
         <th>Role</th>
+        <th>Status</th>
         <th>Registered</th>
+        <th>Actions</th>
     </tr>
 
     <?php foreach ($users as $user): ?>
@@ -51,8 +55,59 @@ $users = $query->fetchAll(PDO::FETCH_ASSOC);
             </td>
 
             <td>
+                <?php if ((int) $user['isBanned'] === 1): ?>
+                    🔴 Banned
+                <?php else: ?>
+                    🟢 Active
+                <?php endif; ?>
+            </td>
+
+            <td>
                 <?= htmlspecialchars($user['createdAt'], ENT_QUOTES, 'UTF-8') ?>
             </td>
+                    
+<td>
+    <?php if ($user['role'] === 'admin'): ?>
+
+        Protected
+
+    <?php else: ?>
+
+        <form action="updateBanStatus.php" method="POST">
+
+            <input type="hidden" name="csrf_token"
+                value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
+
+            <input type="hidden" name="user_id"
+                value="<?= (int) $user['id'] ?>">
+
+           
+    <?php if ((int) $user['isBanned'] === 1): ?>
+
+    <p>
+        <strong>Ban reason:</strong>
+        <?= htmlspecialchars($user['banReason'] ?? '', ENT_QUOTES, 'UTF-8') ?>
+    </p>
+
+    <button type="submit" name="action" value="unban"
+        onclick="return confirm('Are you sure you want to unban this user?');">
+        Unban
+    </button>
+
+            <?php else: ?>
+
+                <a href="index.php?page=banUser&id=<?= (int) $user['id'] ?>#banForm">
+                    Ban
+                </a>
+
+        <?php endif; ?>
+
+
+        </form>
+
+    <?php endif; ?>
+</td>
+
         </tr>
     <?php endforeach; ?>
 </table>

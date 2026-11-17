@@ -26,6 +26,7 @@ CREATE TABLE userAccount (
     gender ENUM('male', 'female', 'other') NOT NULL,
     role_id INT NOT NULL DEFAULT 1,
     isBanned TINYINT(1) NOT NULL DEFAULT 0,
+    banReason VARCHAR(500) DEFAULT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP, /* when the row is first created, automatically put the current date and time here*/
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_user_role

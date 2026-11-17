@@ -1,4 +1,3 @@
-
 <?php
 if (!defined('GROWUM_ADMIN')) {
     http_response_code(403);
