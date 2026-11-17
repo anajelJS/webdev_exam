@@ -7,7 +7,7 @@ require_once '../classes/like.php';
 require_once '../classes/comment.php';
 
 $auth = new Auth();
-$auth->requireLogin();
+$auth->requireLogin($pdo);
 
 $like = new Like($pdo);
 $comment = new Comment($pdo);

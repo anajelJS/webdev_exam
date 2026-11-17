@@ -3,10 +3,9 @@
 session_start();
 require_once '../includes/connection.php';
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login.php");
-    exit();
-}
+require_once '../classes/auth.php';
+$auth = new Auth();
+$auth->requireLogin($pdo);
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['uploadPicture'])) {
     header("Location: editProfile.php?status=error");

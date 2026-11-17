@@ -7,7 +7,7 @@
 
     $auth = new Auth();
 
-    $auth->requireLogin();
+    $auth->requireLogin($pdo);
     $auth->requirePost();
     $auth->validateCsrf();
 

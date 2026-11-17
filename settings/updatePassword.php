@@ -3,32 +3,33 @@
 session_start();
 require_once "../includes/connection.php";
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login.php");
-    exit();
-}
+require_once '../classes/auth.php';
 
-if (isset($_POST['changePassword'])) {
-    if (
-        !isset($_POST['csrf_token'], $_SESSION['csrf_token']) ||
-        !is_string($_POST['csrf_token']) ||
-        !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])
+$auth = new Auth();
+
+$auth->requireLogin($pdo);
+$auth->requirePost();
+$auth->validateCsrf();
+
+$currentPassword = $_POST['currentPassword'] ?? '';
+$newPassword = $_POST['newPassword'] ?? '';
+$confirmPassword = $_POST['confirmPassword'] ?? '';
+
+if (
+    !is_string($currentPassword) ||
+    !is_string($newPassword) ||
+    !is_string($confirmPassword)
 ) {
-    echo "Invalid security token. Please try again.";
-    exit();
+    exit("Invalid password input.");
 }
-    $currentPassword = $_POST['currentPassword'];
-    $newPassword = $_POST['newPassword'];
-    $confirmPassword = $_POST['confirmPassword'];
 
-    if (strlen($newPassword) < 8) {
-    echo "New password must be at least 8 characters long";
-    exit();
+if (strlen($newPassword) < 8) {
+    exit("New password must be at least 8 characters long.");
 }
-    if ($newPassword !== $confirmPassword) {
-        echo "New password and confirm password do not match";
-        exit();
-    }
+
+if ($newPassword !== $confirmPassword) {
+    exit("New password and confirm password do not match.");
+}
 
     $query = $pdo->prepare("SELECT password FROM userAccount WHERE id = ?");
     $query->execute([$_SESSION['user_id']]);
@@ -49,4 +50,4 @@ if (isset($_POST['changePassword'])) {
         echo "Current password is incorrect!";
         exit();
     }
-}
+

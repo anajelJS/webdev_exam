@@ -1,14 +1,31 @@
 <?php
-
 class Auth
 {
-    public function requireLogin(string $loginPath = '../login.php'): void
-    {
-        if (!isset($_SESSION['user_id'])) {
-            header("Location: " . $loginPath);
-            exit();
-        }
+    
+public function requireLogin(PDO $pdo, string $loginPath = '../login.php'): void
+{
+    if (!isset($_SESSION['user_id'])) {
+        header("Location: " . $loginPath);
+        exit();
     }
+
+    $banReason = $this->checkBanStatus(
+        $pdo,
+        (int) $_SESSION['user_id']
+    );
+
+    if ($banReason !== null) {
+
+        $_SESSION = [];
+        session_regenerate_id(true);
+
+        $_SESSION['banMessage'] = $banReason;
+
+        header("Location: " . $loginPath);
+        exit();
+    }
+}
+
     public function validateCsrf(): void
 {
     if (
@@ -31,7 +48,7 @@ public function requirePost(): void
 
 public function requireAdmin(PDO $pdo): void
 {
-    $this->requireLogin();
+    $this->requireLogin($pdo);
 
     $query = $pdo->prepare(
         "SELECT role.name

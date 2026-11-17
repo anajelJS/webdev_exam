@@ -2,10 +2,9 @@
 session_start();
 require_once '../includes/connection.php';
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login.php");
-    exit();
-}
+require_once '../classes/auth.php';
+$auth = new Auth();
+$auth->requireLogin($pdo);
 ?>
 
 <h2>Edit your profile</h2>

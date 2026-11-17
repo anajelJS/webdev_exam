@@ -5,7 +5,7 @@ require_once '../includes/connection.php';
 require_once '../classes/auth.php';
 
 $auth = new Auth();
-$auth->requireLogin();
+$auth->requireLogin($pdo);
 
 $loggedInUserId = (int) $_SESSION['user_id'];
 
