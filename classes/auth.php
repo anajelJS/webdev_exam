@@ -51,4 +51,24 @@ public function requireAdmin(PDO $pdo): void
     }
 }
 
+public function checkBanStatus(PDO $pdo, int $userId): ?string
+{
+    $query = $pdo->prepare(
+        "SELECT isBanned, banReason
+         FROM userAccount
+         WHERE id = ?"
+    );
+
+    $query->execute([$userId]);
+
+    $user = $query->fetch(PDO::FETCH_ASSOC);
+
+    if ($user && (int) $user['isBanned'] === 1) {
+        return $user['banReason'] ?? 'No reason provided.';
+    }
+
+    return null;
+}
+
+
 }

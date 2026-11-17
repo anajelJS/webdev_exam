@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once "includes/connection.php";
+require_once "classes/auth.php";
+$auth = new Auth();
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 
@@ -12,8 +14,22 @@ $query->execute([$username]);
 $user = $query->fetch(); 
 
 if ($user && password_verify($password, $user['password'])) {
-    $_SESSION['username'] = $username; 
-    $_SESSION['user_id'] = $user['id']; 
+
+    $banReason = $auth->checkBanStatus($pdo, (int) $user['id']);
+
+    if ($banReason !== null) {
+        unset($_SESSION['username'], $_SESSION['user_id']);
+
+        $_SESSION['banMessage'] = $banReason;
+
+        header("Location: login.php");
+        exit();
+    }
+
+    session_regenerate_id(true);
+
+    $_SESSION['username'] = $username;
+    $_SESSION['user_id'] = $user['id'];
     header("Location: home.php"); 
     exit(); 
 } else {
