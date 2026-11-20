@@ -42,4 +42,71 @@ class Moderation
 
         return $query->rowCount() > 0;
     }
+
+public function deletePost(int $postId): bool
+{
+    $query = $this->pdo->prepare(
+        "SELECT image FROM post WHERE id = ?"
+    );
+
+    $query->execute([$postId]);
+
+    $post = $query->fetch(PDO::FETCH_ASSOC);
+
+    if (!$post) {
+        return false;
+    }
+
+    $query = $this->pdo->prepare(
+        "DELETE FROM post WHERE id = ?"
+    );
+
+    $query->execute([$postId]);
+
+    if ($query->rowCount() === 0) {
+        return false;
+    }
+
+    if (!empty($post['image'])) {
+
+        $imagePath = __DIR__ . '/../uploads/posts/' 
+            . basename($post['image']);
+
+        if (is_file($imagePath)) {
+            unlink($imagePath);
+        }
+    }
+
+    return true;
+}
+public function updatePost(int $postId, string $content): bool
+{
+    $query = $this->pdo->prepare(
+        "UPDATE post
+         SET content = ?
+         WHERE id = ?"
+    );
+
+    return $query->execute([$content, $postId]);
+}
+public function deleteComment(int $commentId): bool
+{
+    $query = $this->pdo->prepare(
+        "DELETE FROM postComment WHERE id = ?"
+    );
+
+    $query->execute([$commentId]);
+
+    return $query->rowCount() > 0;
+}
+public function updateComment(int $commentId, string $content): bool
+{
+    $query = $this->pdo->prepare(
+        "UPDATE postComment
+         SET content = ?
+         WHERE id = ?"
+    );
+
+    return $query->execute([$content, $commentId]);
+}
 }

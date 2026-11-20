@@ -20,6 +20,8 @@ $page = $_GET['page'] ?? 'dashboard';
     <a href="index.php?page=dashboard">Overview</a> |
     <a href="index.php?page=users">Manage Users</a> |
     <a href="../home.php">Back to Feed</a>
+    <a href="index.php?page=posts">Manage Posts</a> |
+    <a href="index.php?page=comments">Manage Comments</a> |
 </nav>
 
 <hr>
@@ -33,7 +35,20 @@ switch ($page) {
     case 'users':
         include __DIR__ . '/users.php';
         break;
-
+    case 'posts':
+        include __DIR__ . '/posts.php';
+        break;
+    case 'editPost':
+        include __DIR__ . '/posts.php';
+        include __DIR__ . '/editPost.php';
+        break;
+    case 'comments':
+        include __DIR__ . '/comments.php';
+        break;
+    case 'editComment':
+        include __DIR__ . '/comments.php';
+        include __DIR__ . '/editComment.php';
+        break;
     default:
         http_response_code(404);
         echo "<p>Page not found.</p>";
@@ -42,6 +57,8 @@ switch ($page) {
             include __DIR__ . '/users.php';
             include __DIR__ . '/banUser.php';
             break;
+    
+        
 }
 ?>
 
